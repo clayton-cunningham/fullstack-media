@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const HttpError = require("../models/http-error");
 const { validationResult } = require("express-validator");
-const { checkValidation } = require("./validators");
+const getCoordsForAddress = require("../util/location");
 
 const DUMMY_PLACES = [
     {
@@ -43,10 +43,22 @@ const getPlacesByUserId = (req, res, next) => {
     res.json({places});
 }
 
-const createPlace = (req, res, next) => {
-    checkValidation(req);
+const createPlace = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        return next(new HttpError("Invalid input.", 422));
+    }
 
-    const { title, description, coordinates, address, creator } = req.body;
+    const { title, description, address, creator } = req.body;
+    
+    let coordinates;
+    try {
+        coordinates = await getCoordsForAddress(address);
+    } catch (e) {
+        return next(e);
+    }
+    
     const createdPlace = {
         id: uuidv4(),
         title, description, address, creator,
@@ -58,8 +70,12 @@ const createPlace = (req, res, next) => {
     res.status(201).json({place: createdPlace});
 }
 
-const editPlace = (req, res, next) => {
-    checkValidation(req);
+const editPlace = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        throw new HttpError("Invalid input.", 422);
+    }
 
     const placeId = req.params.pid;
     const index = DUMMY_PLACES.findIndex(p => p.id === placeId)
@@ -68,12 +84,21 @@ const editPlace = (req, res, next) => {
     }
 
     const place = {...DUMMY_PLACES.find(p => p.id === placeId)}
-    const { title, description, coordinates, address } = req.body;
+    const { title, description, address } = req.body;
     
+    if (address) {
+        place.address = address;
+        
+        let coordinates;
+        try {
+            coordinates = await getCoordsForAddress(address);
+        } catch (e) {
+            return next(e);
+        }
+        place.location = coordinates
+    }
     if (title) place.title = title;
     if (description) place.description = description;
-    if (address) place.address = address;
-    if (coordinates) place.location = coordinates;
     // if (creator) place.creator = creator; Not creator - shouldn't be able to change in this app
 
     DUMMY_PLACES[index] = place;

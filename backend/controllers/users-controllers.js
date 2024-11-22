@@ -2,7 +2,6 @@
 const { v4: uuidv4 } = require("uuid");
 
 const HttpError = require("../models/http-error");
-const { checkValidation } = require("./validators");
 
 const DUMMY_USERS = [
     {id: 1, name: "Test User 1", email: "testuser1@email.com", password: "12345", image: "logo192.png", places: 3},
@@ -25,7 +24,11 @@ const getUserById = (req, res, next) => {
 }
 
 const userSignup = (req, res, next) => {
-    checkValidation(req);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        throw new HttpError("Invalid input.", 422);
+    }
 
     const { name, email, password, image } = req.body;
 
