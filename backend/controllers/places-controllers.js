@@ -1,7 +1,9 @@
 
 const { v4: uuidv4 } = require("uuid");
 
-const HttpError = require("../models/http-error")
+const HttpError = require("../models/http-error");
+const { validationResult } = require("express-validator");
+const { checkValidation } = require("./validators");
 
 const DUMMY_PLACES = [
     {
@@ -42,6 +44,8 @@ const getPlacesByUserId = (req, res, next) => {
 }
 
 const createPlace = (req, res, next) => {
+    checkValidation(req);
+
     const { title, description, coordinates, address, creator } = req.body;
     const createdPlace = {
         id: uuidv4(),
@@ -55,9 +59,15 @@ const createPlace = (req, res, next) => {
 }
 
 const editPlace = (req, res, next) => {
+    checkValidation(req);
+
     const placeId = req.params.pid;
-    const place = {...DUMMY_PLACES.find(p => p.id === placeId)}
     const index = DUMMY_PLACES.findIndex(p => p.id === placeId)
+    if (index < 0) {
+      throw new HttpError("Could not find a place for the provided id.", 404);
+    }
+
+    const place = {...DUMMY_PLACES.find(p => p.id === placeId)}
     const { title, description, coordinates, address } = req.body;
     
     if (title) place.title = title;
@@ -68,18 +78,15 @@ const editPlace = (req, res, next) => {
 
     DUMMY_PLACES[index] = place;
 
-    res.status(204).json({place});
+    res.status(200).json({place});
 }
 
 const deletePlace = (req, res, next) => {
     const placeId = req.params.pid;
     const index = DUMMY_PLACES.findIndex(p => p.id === placeId)
-    // const index = DUMMY_PLACES.indexOf(place)
 
     if (index > -1) DUMMY_PLACES.splice(index, 1);
     else throw new HttpError("Could not find a place for the provided id.", 404);
-
-    // DUMMY_PLACES = DUMMY_PLACES.filter(p => p.id != pid)
 
     res.status(204).json({});
 }
