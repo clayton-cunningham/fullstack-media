@@ -75,24 +75,12 @@ const userSignup = async (req, res, next) => {
         return next (error);
     }
     
-    // let places;
-    // try {
-    //     places = await Place.find({ creator: userId });
-    // } catch (e) {
-    //     const error = new HttpError(
-    //         "Failed to retrieve a user's places, please try again",
-    //         500,
-    //         e
-    //     );
-    //     return next (error);
-    // }
-    
     const createdUser = new User({
         name,
         email,
         password,
         image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg",
-        places: 0,
+        places: [],
     })
 
     try {
