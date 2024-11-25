@@ -9,18 +9,18 @@ const Users = () => {
   const [loadedUsers, setLoadedUsers] = useState([]);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-  const getUsers = async () => {
-    try {
-      const response = await sendRequest(
-        "http://localhost:5000/api/users",
-      );
-      setLoadedUsers(response.users);
-    } catch (e) { }
-  }
-
   useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const response = await sendRequest(
+          "http://localhost:5000/api/users",
+        );
+        setLoadedUsers(response.users);
+      } catch (e) { }
+    }
+
     getUsers();
-  }, [])
+  }, [sendRequest])
 
   return (
     <React.Fragment>

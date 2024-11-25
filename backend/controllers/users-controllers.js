@@ -117,9 +117,7 @@ const userLogin = async (req, res, next) => {
         return next (error);
     }
 
-    const token = uuidv4();
-
-    res.status(200).json({token, message: `Logged into user ${user.name}`});
+    res.status(200).json({ user: user.toObject({ getters: true }), message: `Logged into user ${user.name}`});
 }
 
 exports.getUsers = getUsers;
