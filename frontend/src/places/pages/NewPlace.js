@@ -39,7 +39,7 @@ const NewPlace = () => {
   const placeSubmitHandler = async event => {
     event.preventDefault();
     try {
-      const response = await sendRequest(
+      await sendRequest(
         "http://localhost:5000/api/places",
         "POST",
         JSON.stringify({

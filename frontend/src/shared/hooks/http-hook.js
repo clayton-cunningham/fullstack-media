@@ -24,8 +24,8 @@ export const useHttpClient = () => {
             );
 
             activeHttpRequests.current = activeHttpRequests.current.filter(a => a !== httpAbortController);
-            const responseData = await response.json();
-            console.log(responseData);
+            const responseData = response.status !== 204 ? await response.json() : {};
+            // console.log(responseData);
             if (!response.ok) {
                 throw new Error(responseData.message);
             }
