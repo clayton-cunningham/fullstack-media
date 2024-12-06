@@ -13,6 +13,7 @@ import './PlaceForm.css';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 
 const NewPlace = () => {
   const auth = useContext(AuthContext);
@@ -39,18 +40,17 @@ const NewPlace = () => {
   const placeSubmitHandler = async event => {
     event.preventDefault();
     try {
+      const formData = new FormData();
+      formData.append('title', formState.inputs.title.value);
+      formData.append('description', formState.inputs.description.value);
+      formData.append('address', formState.inputs.address.value);
+      formData.append('creator', auth.userId);
+      formData.append('image', formState.inputs.image.value);
+
       await sendRequest(
         "http://localhost:5000/api/places",
         "POST",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          address: formState.inputs.address.value,
-          creator: auth.userId,
-        }),
-        {
-          "Content-Type": "application/json",
-        },
+        formData,
       );
       history.push('/');
     } catch (e) { }
@@ -88,6 +88,7 @@ const NewPlace = () => {
           errorText="Please enter a valid address."
           onInput={inputHandler}
         />
+        <ImageUpload center id="image" onInput={inputHandler} />
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE
         </Button>
