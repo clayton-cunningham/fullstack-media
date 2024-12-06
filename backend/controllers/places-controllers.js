@@ -5,6 +5,7 @@ const { validationResult } = require("express-validator");
 const getCoordsForAddress = require("../util/location");
 const Place = require("../models/place");
 const User = require("../models/user");
+const fs = require('fs');
 const { default: mongoose } = require("mongoose");
 
 const getPlaceById = async (req, res, next) => {
@@ -195,6 +196,8 @@ const deletePlace = async (req, res, next) => {
         return next (error);
     }
 
+    const imagePath = place.image;
+
     try {
         const sess = await mongoose.startSession();
         sess.startTransaction();
@@ -210,6 +213,8 @@ const deletePlace = async (req, res, next) => {
         console.log(err)
         return next (error);
     }
+
+    fs.unlink(imagePath, (err) => { console.log(err); });
 
     res.status(204).json({});
 }
