@@ -141,9 +141,9 @@ const editPlace = async (req, res, next) => {
         return next (error);
     }
 
-    if (!place) {
+    if (!place || place.creator.toString() !== req.userData.userId) {
         const error = new HttpError(
-            "Could not find a place for the provided id.", 404
+            "Could not find a place for the provided place and user ids.", 404
         );
         return next (error);
     }
@@ -189,9 +189,9 @@ const deletePlace = async (req, res, next) => {
         return next (error);
     }
 
-    if (!place) {
+    if (!place || place.creator.id !== req.userData.userId) {
         const error = new HttpError(
-            "Could not find a place for the provided id.", 404
+            "Could not find a place for the provided place and user ids.", 404
         );
         return next (error);
     }
