@@ -24,7 +24,7 @@ export const useAuth = () => {
     useEffect(() => {
       const storedData = JSON.parse(localStorage.getItem('userData'));
       if (storedData && storedData.token && new Date(storedData.expiration) > new Date()) {
-        login(storedData.uid, storedData.token, storedData.expiration);
+        login(storedData.userId, storedData.token, storedData.expiration);
       }
     }, [login]);
     

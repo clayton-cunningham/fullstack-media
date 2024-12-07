@@ -64,7 +64,7 @@ const createPlace = async (req, res, next) => {
         return next(new HttpError("Invalid input.", 422));
     }
 
-    const { title, description, address, creator } = req.body;
+    const { title, description, address } = req.body;
     
     let coordinates;
     try {
@@ -74,14 +74,15 @@ const createPlace = async (req, res, next) => {
     }
 
     const createdPlace = new Place({
-        title, description, address, creator,
+        title, description, address, 
+        creator: req.userData.userId,
         location: coordinates,
         image: req.file.path,
     })
 
     let user;
     try {
-        user = await User.findById(creator);
+        user = await User.findById(req.userData.userId);
     } catch (e) {
         const error = new HttpError(
             'Failed to find the referenced user, please try again',
