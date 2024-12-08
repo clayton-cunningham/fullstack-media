@@ -42,7 +42,7 @@ app.use((error, req, res, next) => {
 })
 
 mongoose
-    .connect("mongodb+srv://claytonccunningham:yIw7U69S4EZqhqEy@fullstackcluster.wapcj.mongodb.net/places?retryWrites=true&w=majority&appName=FullstackCluster")
+    .connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@fullstackcluster.wapcj.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=FullstackCluster`)
     .then(() => {
         app.listen(5000);
     })

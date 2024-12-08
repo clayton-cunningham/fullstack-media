@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
             throw new Error('Authentication failed');
         }
 
-        const decodedToken = jsonwebtoken.verify(token, 'gerudoSecretCodeDiamond');
+        const decodedToken = jsonwebtoken.verify(token, process.env.JWT_KEY);
 
         req.userData = { userId: decodedToken.userId };
 

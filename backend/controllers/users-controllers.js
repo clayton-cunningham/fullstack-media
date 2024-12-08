@@ -111,7 +111,7 @@ const userSignup = async (req, res, next) => {
                 userId: createdUser.id, 
                 email: createdUser.email,
             }, 
-            'gerudoSecretCodeDiamond',
+            process.env.JWT_KEY,
             { expiresIn: '1h', },
         )
     } catch (e) {
@@ -171,7 +171,7 @@ const userLogin = async (req, res, next) => {
                 userId: user.id, 
                 email: user.email,
             }, 
-            'gerudoSecretCodeDiamond',
+            process.env.JWT_KEY,
             { expiresIn: '1h', },
         )
     } catch (e) {

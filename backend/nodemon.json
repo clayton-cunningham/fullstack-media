@@ -1,0 +1,9 @@
+{
+    "env": {
+        "DB_USER": "claytonccunningham",
+        "DB_PASSWORD": "yIw7U69S4EZqhqEy",
+        "DB_NAME": "places",
+        "GOOGLE_API_KEY": "6740cf0ddd80e206130748lqz312dcf",
+        "JWT_KEY": "gerudoSecretCodeDiamond"
+    }
+}
