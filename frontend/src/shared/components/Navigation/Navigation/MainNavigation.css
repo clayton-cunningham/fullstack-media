@@ -23,7 +23,8 @@
 
 .main-navigation__title a {
   text-decoration: none;
-  color: white;
+  color: #f8df00;
+  text-shadow: 3px 2px #292929;
 }
 
 .main-navigation__header-nav {
